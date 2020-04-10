@@ -55,7 +55,10 @@ mv fisher/text/* fisher_disf/train/
     %s/\<d\>/'d/g
     %s/\<re\>/'re/g
     
+   2d. if using LMs for surprisal error analysis, change a few more things:
 
+    %s/\.//g
+    %s/you know/you_know/g
 ____________________________________________________
 The corresponding data are in `/g/ssli/projects/disfluencies/ttmt001/fisher_{disf,clean,dtok}`. 
 
