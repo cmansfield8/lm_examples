@@ -16,7 +16,7 @@ import cPickle as pickle
 
 parser = argparse.ArgumentParser(description='PyTorch RNN/LSTM Language Model')
 parser.add_argument('--data_path', type=str, \
-        default='/g/ssli/projects/disfluencies/ttmt001',
+        default='/homes/coman8/lm_examples/exp1',
         help='location of the data corpus')
 parser.add_argument('--dtype', type=str, \
         default='disf',
@@ -40,7 +40,7 @@ parser.add_argument('--dropout', type=float, default=0.2,
 parser.add_argument('--tied', action='store_true',
         help='tie the word embedding and softmax weights')
 parser.add_argument('--eval_path', type=str, \
-        default='/g/ssli/projects/disfluencies/ttmt001', \
+        default='/homes/coman8/lm_examples/exp1/fisher_cont', \
         help='location of the data to score (swbd)')
 parser.add_argument('--ftype', type=str, \
         default='ms', \
@@ -52,7 +52,7 @@ parser.add_argument('--eos', action='store_true', \
 parser.add_argument('--cuda', action='store_true', \
         help='use CUDA')
 parser.add_argument('--save', type=str,  \
-        default='/g/ssli/projects/disfluencies/ttmt001/fisher/lstm-model.pt',\
+        default='/homes/coman8/lm_examples/exp1/lstm-model.pt',\
         help='path to save the final model')
 args = parser.parse_args()
 

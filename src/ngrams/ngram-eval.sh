@@ -2,24 +2,17 @@
 
 dtype=$1 # clean or disf or dtok
 ftype=$2 # ms or ptb 
-base_dir=/g/ssli/projects/disfluencies/ttmt001
+base_dir=/homes/coman8/lm_examples/exp1
 vocab_txt=${base_dir}/fisher_${dtype}/fisher.vocab
 order=3
 model=fisher.trigram.model
 
 # evaluate
-#valid_text=$base_dir/valid.txt
 #eval_output_text=$base_dir/ppl_valid.txt 
 #valid_text=$base_dir/debug/fsh_100045_A
-#eval_output_text=$base_dir/debug/fsh_100045_A.ppl
 
 ## compute for swbd sentences
-if [ $dtype == "dtok" ] 
-then
-    valid_text=$base_dir/swbd_${ftype}_sents_notok.txt
-else
-    valid_text=$base_dir/swbd_${ftype}_sents.txt
-fi
+valid_text=$base_dir/fisher_${dtype}/switchboard_lm_${ftype}.txt
 echo $valid_text
 
 eval_output_text=$base_dir/fisher_${dtype}/swbd_${ftype}_sents_ppl.txt

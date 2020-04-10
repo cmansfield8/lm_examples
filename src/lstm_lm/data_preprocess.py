@@ -47,7 +47,7 @@ if __name__ == '__main__':
     pa = argparse.ArgumentParser(description = \
             'Preprocess Fisher training data, binning by sentence lengths')
     pa.add_argument('--data_dir', type=str, \
-            default='/g/ssli/projects/disfluencies/ttmt001/', \
+            default='/homes/coman8/lm_example/exp1', \
             help='data directory, including vocab file')
     pa.add_argument('--dtype', type=str, \
             default='disf', \

@@ -13,32 +13,32 @@ def get_lm_scores(in_file, out_file, df_idx, ftype, eos=True):
     assert len(a) == len(df_idx)
     for i, scores in enumerate(a):
         row = df_idx.iloc[i]
-        col_name = 'ms_sent' if ftype == 'ms' else 'tree_sent'
-        num_tokens = len(row[col_name].split())
-        if eos:
-            num_tokens += 1
-        else:
-            scores = scores[:-1]
-        assert num_tokens == len(scores)
-        list_row.append({'file_num': row.file_num, \
+        # col_name = 'ms_sent' if ftype == 'ms' else 'tree_sent'
+        # num_tokens = len(row[col_name].split())
+        # if eos:
+        #    num_tokens += 1
+        # else:
+        #    scores = scores[:-1]
+        # assert num_tokens == len(scores)
+        list_row.append({'file': row.file, \
                 'speaker': row.speaker, \
                 'turn': row.turn, \
                 'sent_num': row.sent_num, \
                 'scores': scores})
     df = pd.DataFrame(list_row)
-    cols = ['file_num', 'speaker', 'turn', 'sent_num', 'scores']
+    cols = ['file', 'speaker', 'turn', 'sent_num', 'scores']
     df.to_csv(out_file, sep='\t', index=False, columns=cols, header=True)
 
 if __name__ == '__main__':
     pa = argparse.ArgumentParser(description='Get scores from lstm model')
     pa.add_argument('--common_dir', \
-            default='/g/ssli/projects/disfluencies/ttmt001', \
+            default='../../exp1', \
             help='project directory')
     pa.add_argument('--in_dir', \
-            default='/g/ssli/projects/disfluencies/ttmt001', \
+            default='../../exp1', \
             help='project directory')
     pa.add_argument('--out_dir', \
-            default='/g/ssli/projects/disfluencies/ttmt001', \
+            default='../../exp1', \
             help='output directory')
     pa.add_argument('--dtype', \
             default='dtok', type=str, \
@@ -59,10 +59,7 @@ if __name__ == '__main__':
     out_file = os.path.join(args.out_dir, outname)
 
     # file with sentence indices
-    if "dtok" in in_file: 
-        idx_file = os.path.join(args.common_dir, 'swbd_sents_with_ann_notok.tsv')
-    else:
-        idx_file = os.path.join(args.common_dir, 'swbd_sents.tsv')
+    idx_file = os.path.join(args.common_dir, 'swb_full.tsv')
     print "idx common file:", idx_file
     df_idx = pd.read_csv(idx_file, sep='\t')
 
