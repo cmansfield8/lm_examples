@@ -14,7 +14,7 @@ from data_preprocess import read_vocab, BUCKETS
 
 parser = argparse.ArgumentParser(description='PyTorch RNN/LSTM Language Model')
 parser.add_argument('--data_path', type=str, \
-        default='/g/ssli/projects/disfluencies/ttmt001',
+        default='/homes/coman8/lm_examples/exp1',
         help='location of the data corpus')
 parser.add_argument('--dtype', type=str, \
         default='disf',
@@ -46,7 +46,7 @@ parser.add_argument('--cuda', action='store_true',
 parser.add_argument('--log-interval', type=int, default=200, metavar='N',
         help='report interval')
 parser.add_argument('--save', type=str,  \
-        default='/g/ssli/projects/disfluencies/ttmt001/fisher/lstm-lm-0.pt',
+        default='/homes/coman8/lm_examples/exp1/lstm-lm-0.pt',
         help='path to save the final model')
 args = parser.parse_args()
 
@@ -188,27 +188,27 @@ def train():
 #####################################
 
 # At any point you can hit Ctrl + C to break out of training early.
-ckpt = args.save[:-2] + 'ckpt'
 try:
-    if os.path.isfile(ckpt):
-        print("=> loading checkpoint '{}' ...".format(ckpt))
-        if cuda:
-            checkpoint = torch.load(ckpt)
-        else:
+    #if os.path.isfile(ckpt):
+    #    print("=> loading checkpoint '{}' ...".format(ckpt))
+    #    if cuda:
+    #        checkpoint = torch.load(ckpt)
+    #    else:
             # Load GPU model on CPU
-            checkpoint = torch.load(ckpt, \
-                    map_location=lambda storage, loc: storage)
-        start_epoch = checkpoint['epoch']
-        best_val_loss = checkpoint['best_val_loss']
-        model.load_state_dict(checkpoint['state_dict'])
-        print("=> loaded checkpoint '{}' (trained for {} epochs)".format(\
-                ckpt, checkpoint['epoch']))
-    else:
-        start_epoch = 1
-        best_val_loss = None
+    #        checkpoint = torch.load(ckpt, \
+    #                map_location=lambda storage, loc: storage)
+    #    start_epoch = checkpoint['epoch']
+    #    best_val_loss = checkpoint['best_val_loss']
+    #    model.load_state_dict(checkpoint['state_dict'])
+    #    print("=> loaded checkpoint '{}' (trained for {} epochs)".format(\
+    #            ckpt, checkpoint['epoch']))
+    # else:
+    start_epoch = 1
+    best_val_loss = None
 
     for epoch in range(start_epoch, args.epochs+1):
-        epoch_start_time = time.time()
+        ckpt_name = args.save[:-3] + "_" + str(epoch)
+	epoch_start_time = time.time()
         train()
         val_loss = evaluate(valid_batches)
         print('------------')
@@ -220,13 +220,13 @@ try:
         sys.stdout.flush()
         # Save the model if the validation loss is the best we've seen so far.
         if not best_val_loss or val_loss < best_val_loss:
-            with open(args.save, 'wb') as f:
+            with open(ckpt_name + '.pt', 'wb') as f: 
                 torch.save(model, f)
             best_val_loss = val_loss
             state = {'epoch': start_epoch + epoch - 1, \
                 'state_dict': model.state_dict(), \
                 'best_val_loss': best_val_loss}
-            torch.save(state, ckpt)
+            torch.save(state, ckpt_name + '.ckpt')
         else:
             # Anneal the learning rate if no improvement has been seen 
             # in the validation dataset.
