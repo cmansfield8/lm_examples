@@ -10,4 +10,3 @@ python get_lstm_results.py --in_dir ${base_dir} \
  --out_dir ${base_dir}/fisher_${dtype} --ftype ${ftype} \
  --dtype $dtype --modelname $modelname
 
-#python get_perplexity.py "${base_dir}/fisher_${dtype}/swbd_${ftype}_${modelname}_scores.tsv" "${base_dir}/fisher_${dtype}/swbd_${ftype}_${modelname}_scores_ppl.tsv"

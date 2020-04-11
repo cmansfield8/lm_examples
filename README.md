@@ -16,7 +16,7 @@ Language model examples -- tutorial code for new grad students at TIAL lab.
 * Stats: 
     * train: from 15522 files -- wc >> 1,181,752 sents; 14,363,366 tokens
     * valid: from 3137 files -- wc >> 268,991 sents; 2,841,422 tokens
-Recommendation: use the dtok version.
+For swbd errors surprisal study: use the dtok version.
 
 # Steps
 Some of these are already done (this is for documentation purposes only)
@@ -29,7 +29,7 @@ mv fisher/text/fsh_1* fisher_disf/valid/
 mv fisher/text/* fisher_disf/train/
 ```
 
-**2. Preprocessings** (also should be done already -- skip):
+**2. Preprocessings** (also should be done already -- skip EXCEPT 2d):
     
    2a0. (if files have associcated features -- dtok set):
     `./src/grep_words.sh {train,valid}`
@@ -55,12 +55,12 @@ mv fisher/text/* fisher_disf/train/
     %s/\<d\>/'d/g
     %s/\<re\>/'re/g
     
-   2d. if using LMs for surprisal error analysis, change a few more things:
+   2d. IMPORTANT: if using for surprisal error analysis, change a few more things.  This is not done yet in the raw data!:
 
     %s/\.//g
     %s/you know/you_know/g
 ____________________________________________________
-The corresponding data are in `/g/ssli/projects/disfluencies/ttmt001/fisher_{disf,clean,dtok}`. 
+The corresponding data are in `/g/ssli/projects/disfluencies/ttmt001/fisher_{disf,clean,dtok}` (without step 2d!)
 
 The outputs of the next steps are also in that directory, but I recommend studying and running the following steps 
 for your own understanding and practice.
@@ -82,32 +82,15 @@ split -d -n 10 valid.txt
 
 `./src/ngrams/ngram-lms.sh {disf,clean,dtok}`
 
-**6. Prepare switchboard** (or other dataset) sentences to compute ppl score (should also be done already -- skip):
+**6. Prepare switchboard** (or other dataset) sentences to compute ppl score:
 
-`python src/prep_lm_sentences.py`
+`python src/preprocess_for_models.py swbd_file output_file --tagging`
 
-This produces swbd_sents.tsv with turn, sent_num etc. info for all sentences.
+This produces swbd_*_sents.txt
 
 * ptb = Penn Treebank version of transcripts
 * ms = Mississippi State version of transcripts
 
-For your purposes, you don't need to worry about the difference. Note, though, that ms tokens don't split contractions while ptb ones do (e.g. "it's" in ms, "it 's" in ptb). So if you've been using the dtok version, it's better to choose ms; if you've been using disf or clean, use ptb.
-
-For ngram score computations -- produce text files one sentence per line:
-
- ```
- cut -f5 swbd_sents.tsv > swbd_ms_sents.txt
- cut -f6 swbd_sents.tsv > swbd_ptb_sents.txt
- ```
-
- OR
-
- ```
- cut -f5 swbd_sents_with_ann_notok.tsv > swbd_ms_sents_notok.txt
- cut -f6 swbd_sents_with_ann_notok.tsv > swbd_ptb_sents_notok.txt
- ```
- 
- Then remove header line.
 
 **7. Compute ngram scores:**
 
@@ -116,9 +99,6 @@ For ngram score computations -- produce text files one sentence per line:
 
 This computes LM model scores (perplexity) on the SWBD dataset.
 
-*Exercise*: 
-   1. Compute perplexity on the valid.txt data.
-   2. Find yourself a written text dataset and compute perplexity on that dataset. Compare ppl on these out-of-domain datasets.
 
 **8. Convert OOV tokens** to `<unk>` -- preparation step for LSTM LM models:
 ```
@@ -149,12 +129,15 @@ NOTE: need to add special words to both clean and disf fisher vocabs:
 
 `./src/lstm_lm/job{5000,5001,5002}.sh`
 
-**11. Make table of scores** (optional):
+(Note - the latest version for swbd surprisal analysis is job 5004.  It actually uses a GRU (despite the lstm naming conventions)
+
+**11. Make table of scores**:
 
 ```
 lstm_lm/run_eval_lstm.sh disf 5000 {ms,ptb}
 lstm_lm/run_eval_lstm.sh clean 5001 {ms,ptb}
 lstm_lm/run_eval_lstm.sh dtok 5002 {ms,ptb}
 ```
-
+**12. Get perplexity scores**:
+lstm_lm/getppl.sh {ms, ptb}
 
