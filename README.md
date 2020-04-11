@@ -1,5 +1,5 @@
 # lm_examples
-Language model examples -- tutorial code for new grad students at TIAL lab.
+Language model examples -- tutorial code for new grad students at TIAL lab.  Update by Courtney Mansfield for building LMs according to her dissertation project.
 
 # Dependencies
 * SRI LM: /g/tial/sw/pkgs/srilm-1.7.1/bin/i686-m64/
@@ -61,9 +61,6 @@ mv fisher/text/* fisher_disf/train/
     %s/you know/you_know/g
 ____________________________________________________
 The corresponding data are in `/g/ssli/projects/disfluencies/ttmt001/fisher_{disf,clean,dtok}` (without step 2d!)
-
-The outputs of the next steps are also in that directory, but I recommend studying and running the following steps 
-for your own understanding and practice.
 
 
 **3. Make vocabulary from training files** (specific to ngrams):
